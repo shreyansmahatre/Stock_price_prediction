@@ -117,12 +117,10 @@ def Moving_average(dataframe, num_period):
 
 # --- 7. MACD CHART ---
 def MACD(dataframe, num_period):
-    macd = pta.macd(dataframe['Close'].iloc[:,0])
-    macd_signal= pta.macd_signal(dataframe['Close'].iloc[:,1])
-    macd_hist= pta.macd_hist(dataframe['Close'].iloc[:,2])
-    dataframe['MACD'] = macd
-    dataframe['MACD_Signal'] = macd_signal
-    dataframe['MACD_Hist'] = macd_hist
+    macd_df = pta.macd(dataframe['Close'])
+    dataframe['MACD'] = macd_df.iloc[:, 0]
+    dataframe['MACD_Hist'] = macd_df.iloc[:, 1]
+    dataframe['MACD_Signal'] = macd_df.iloc[:, 2]
     dataframe = filter_data(dataframe, num_period)
     fig = go.Figure()
     
@@ -134,8 +132,6 @@ def MACD(dataframe, num_period):
         x=dataframe['Date'],
         y=dataframe['MACD_Signal'], name='Overbought', marker_color='red', line=dict(width=2, color='blue', dash='dash'))              
     )
-    c = ['green' if cl < 0 else 'green' for cl in macd_hist]
-    
     fig.update_layout(
         height=300, plot_bgcolor='white', paper_bgcolor='#e1efff', margin=dict(l=0, r=0, t=0, b=0 ),legend=dict(orientation="h", yanchor="top", y=1.02, xanchor="right", x=1)
     )
